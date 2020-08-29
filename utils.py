@@ -242,7 +242,12 @@ def visualize(sess, dcgan, config, option):
     new_image_set = [merge(np.array([images[idx] for images in image_set]), [10, 10]) \
         for idx in range(64) + range(63, -1, -1)]
     make_gif(new_image_set, '%s/test_gif_merged.gif' % sample_dir , duration=8)
-
+    
+  elif option == 5:
+    z_sample = np.random.uniform(-0.5, 0.5, size=(config.batch_size, dcgan.z_dim))
+    samples = sess.run(dcgan.sampler, feed_dict={dcgan.z: z_sample})
+    for i, sample in enumerate(samples):
+      scipy.misc.imsave('%s/test_%s.png' % (sample_dir, i), sample)
 
 def image_manifold_size(num_images):
   manifold_h = int(np.floor(np.sqrt(num_images)))
